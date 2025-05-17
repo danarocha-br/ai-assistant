@@ -16,9 +16,9 @@ import {
 import { Badge } from "@workspace/ui/components/badge";
 import { Calendar, Dot, MapPin } from "lucide-react";
 import { TikToktIcon } from "@workspace/ui/components/icons/tiktok";
-import { SnapchatIcon } from "@workspace/ui/components/icons/snapchat.js";
+import { SnapchatIcon } from "@workspace/ui/components/icons/snapchat";
 import { Button } from "@workspace/ui/components/button";
-import { SocialMediaIcon } from "./talent-card.js";
+import { SocialMediaIcon } from "./talent-card";
 
 export type TalentCardPlatform = {
   name: string;

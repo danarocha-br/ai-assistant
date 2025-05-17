@@ -8,7 +8,7 @@ import {
   AvatarImage,
 } from "@workspace/ui/components/avatar";
 import { Button } from "@workspace/ui/components/button";
-import { Logo } from "@workspace/ui/components/logo.js";
+import { Logo } from "@workspace/ui/components/logo";
 import { MessageLoading } from "@workspace/ui/components/message-loading";
 
 interface ChatBubbleProps {

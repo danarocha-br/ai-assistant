@@ -25,7 +25,7 @@ import {
 import { Checkbox } from "@workspace/ui/components/checkbox";
 import { SnapchatIcon } from "@workspace/ui/components/icons/snapchat";
 import { TikToktIcon } from "@workspace/ui/components/icons/tiktok";
-import { TalentDialog } from "./talent-dialog.js";
+import { TalentDialog } from "./talent-dialog";
 
 type TalentCardPlatform = {
   name: string;
