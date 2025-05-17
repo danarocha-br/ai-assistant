@@ -22,9 +22,10 @@ import {
   Youtube,
   Maximize2,
 } from "lucide-react";
-import { Checkbox } from "./checkbox.js";
-import { SnapchatIcon } from "./icons/snapchat.js";
-import { TikToktIcon } from "./icons/tiktok.js";
+import { Checkbox } from "@workspace/ui/components/checkbox.js";
+import { SnapchatIcon } from "@workspace/ui/components/icons/snapchat.js";
+import { TikToktIcon } from "@workspace/ui/components/icons/tiktok.js";
+import { TalentDialog } from "./talent-dialog.js";
 
 type TalentCardPlatform = {
   name: string;
@@ -32,6 +33,11 @@ type TalentCardPlatform = {
   engagement: string;
   growth: string;
   postFrequency: string;
+  audience?: {
+    age: string;
+    femalePercentage: string;
+    malePercentage: string;
+  };
 };
 
 type TalentCardProps = {
@@ -65,6 +71,7 @@ function TalentCard({ className, talent, ...props }: TalentCardProps) {
         id="choose"
         className="absolute -left-10"
         checked={isCardSelected}
+        onCheckedChange={onCardSelect}
       />
       <div
         onMouseEnter={() => setIsHovered(true)}
@@ -80,16 +87,15 @@ function TalentCard({ className, talent, ...props }: TalentCardProps) {
       >
         {isHovered && (
           <div className="flex items-center absolute top-2 right-2 transition-transform ">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={(e) => {
-                e.stopPropagation();
-                onShowContent();
-              }}
-            >
-              <Maximize2 className="size-3.5" />
-            </Button>
+            <TalentDialog talent={talent}>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Maximize2 className="size-3.5" />
+              </Button>
+            </TalentDialog>
 
             <Button
               variant="ghost"
@@ -202,25 +208,40 @@ function CardHeader({
           <HoverCard key={index}>
             <HoverCardTrigger>
               <Badge variant="social">
-                <SocialMediaIcon className={cn(
-                  platform.name === "instagram" && "bg-[#AF54EC]",
-                  platform.name === "tiktok" && "bg-[#000]",
-                  platform.name === "youtube" && "bg-[#DC2626]",
-                  platform.name === "snapchat" && "bg-[#E5EB00]"
-                )}>
+                <SocialMediaIcon
+                  className={cn(
+                    platform.name === "instagram" && "bg-[#AF54EC]",
+                    platform.name === "tiktok" && "bg-[#000]",
+                    platform.name === "youtube" && "bg-[#DC2626]",
+                    platform.name === "snapchat" && "bg-[#E5EB00]"
+                  )}
+                >
                   {platform.name === "instagram" && <Instagram />}
-                  {platform.name === "youtube" && <Youtube />}
                   {platform.name === "tiktok" && <TikToktIcon />}
+                  {platform.name === "youtube" && <Youtube />}
                   {platform.name === "snapchat" && <SnapchatIcon />}
                 </SocialMediaIcon>
                 {platform.followers}
               </Badge>
             </HoverCardTrigger>
-            <HoverCardContent className="text-xs">
-              <div className="space-y-1">
-                <p>Engagement: {platform.engagement}</p>
-                <p>Growth: {platform.growth}</p>
-                <p>Post Frequency: {platform.postFrequency}</p>
+            <HoverCardContent align="start" className="">
+              <div className="flex flex-col gap-1 text-lg">
+                <p className="inline-flex justify-between items-center font-medium">
+                  <span className="text-muted-foreground text-xs">
+                    Engagement
+                  </span>{" "}
+                  {platform.engagement}
+                </p>
+                <p className="inline-flex justify-between items-center font-medium">
+                  <span className="text-muted-foreground text-xs">Growth</span>{" "}
+                  {platform.growth}
+                </p>
+                <p className="inline-flex justify-between items-center font-medium">
+                  <span className="text-muted-foreground text-xs whitespace-nowrap">
+                    Post frequency
+                  </span>{" "}
+                  {platform.postFrequency}
+                </p>
               </div>
             </HoverCardContent>
           </HoverCard>
@@ -256,7 +277,7 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-export { TalentCard };
+export { TalentCard, SocialMediaIcon };
 
 const getInitials = (name: string) => {
   if (!name) return "";

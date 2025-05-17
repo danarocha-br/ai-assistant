@@ -40,6 +40,7 @@ export const mockData = [
               femalePercentage: "80%",
               malePercentage: "20%",
             },
+            username: "@alexjohnsoninsta",
           },
           {
             name: "tiktok",
@@ -52,6 +53,7 @@ export const mockData = [
               femalePercentage: "76%",
               malePercentage: "24%",
             },
+            username: "@alexjohnsontiktok",
           },
           {
             name: "youtube",
@@ -64,6 +66,7 @@ export const mockData = [
               femalePercentage: "83%",
               malePercentage: "17%",
             },
+            username: "@alexjohnsonyt",
           },
           {
             name: "snapchat",
@@ -76,6 +79,7 @@ export const mockData = [
               femalePercentage: "83%",
               malePercentage: "17%",
             },
+            username: "@alexjohnsonsnap",
           },
         ],
       },
@@ -105,6 +109,7 @@ export const mockData = [
               femalePercentage: "78%",
               malePercentage: "22%",
             },
+            username: "@emmacheminsta",
           },
           {
             name: "tiktok",
@@ -117,7 +122,7 @@ export const mockData = [
               femalePercentage: "70%",
               malePercentage: "30%",
             },
-            
+            username: "@emmachentiktok",
           },
         ],
       },

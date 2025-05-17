@@ -11,6 +11,8 @@ const badgeVariants = cva(
       variant: {
         default:
           "font-semibold border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90",
+        success:
+          "text-xs font-semibold border-transparent bg-green-600 text-primary-foreground [a&]:hover:bg-green-500",
         social:
           "py-1 font-semibold border-transparent bg-accent text-accent-foreground [a&]:hover:bg-primary/90 pl-1",
         secondary:
