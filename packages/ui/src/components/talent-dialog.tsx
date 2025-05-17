@@ -86,7 +86,7 @@ function TalentDialog({ talent, children }: TalentDialogProps) {
           {/* Tags */}
           <div className="flex gap-2">
             {talent.topContent.map((item) => (
-              <Badge variant="secondary">{item}</Badge>
+              <Badge key={item} variant="secondary">{item}</Badge>
             ))}
           </div>
 
@@ -212,4 +212,4 @@ const getInitials = (name: string) => {
     .toUpperCase();
 };
 
-export { TalentDialog, TalentCardPlatform };
+export { TalentDialog };

@@ -24,8 +24,15 @@ export default function Page() {
           <TabsTrigger value="list">
             <LayoutGrid className="h-5 w-5" /> List
           </TabsTrigger>
-          <button className="flex items-center justify-center px-4 bg-muted h-full rounded-md" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-            {theme === "dark" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+          <button
+            className="flex items-center justify-center px-4 bg-muted h-full rounded-md"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            {theme === "dark" ? (
+              <Moon className="h-5 w-5" />
+            ) : (
+              <Sun className="h-5 w-5" />
+            )}
           </button>
         </TabsList>
 

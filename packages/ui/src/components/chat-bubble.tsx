@@ -9,7 +9,7 @@ import {
 } from "@workspace/ui/components/avatar";
 import { Button } from "@workspace/ui/components/button";
 import { Logo } from "@workspace/ui/components/logo.js";
-// import { MessageLoading } from "@workspace/ui/components/message-loading";
+import { MessageLoading } from "@workspace/ui/components/message-loading";
 
 interface ChatBubbleProps {
   variant?: "sent" | "received";
@@ -62,7 +62,7 @@ export function ChatBubbleMessage({
     >
       {isLoading ? (
         <div className="flex items-center space-x-2">
-          {/* <MessageLoading /> */}
+          <MessageLoading />
         </div>
       ) : (
         children

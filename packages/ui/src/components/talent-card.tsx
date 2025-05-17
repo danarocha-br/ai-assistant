@@ -52,23 +52,23 @@ type TalentCardProps = {
     platforms: TalentCardPlatform[];
   };
   removeSelection?: boolean;
+  onSelect?: () => void;
+  isSelected?: boolean;
 } & React.ComponentProps<"div">;
 
 function TalentCard({
   className,
   talent,
   removeSelection = false,
+  onSelect,
+  isSelected = false,
   ...props
 }: TalentCardProps) {
   const [isHovered, setIsHovered] = React.useState(false);
-  const [isCardSelected, setIsCardSelected] = React.useState(false);
   const [showContent, setShowContent] = React.useState(false);
 
   function onShowContent() {
     return setShowContent(!showContent);
-  }
-  function onCardSelect() {
-    return !removeSelection && setIsCardSelected(!isCardSelected);
   }
 
   return (
@@ -77,8 +77,8 @@ function TalentCard({
         <Checkbox
           id="choose"
           className="absolute -left-10"
-          checked={isCardSelected}
-          onCheckedChange={onCardSelect}
+          checked={isSelected}
+          onCheckedChange={onSelect}
         />
       )}
       <div
@@ -88,9 +88,9 @@ function TalentCard({
         className={cn(
           "cursor-pointer w-full border bg-card text-card-foreground flex flex-col gap-4 rounded-md  py-3  transition-all duration-500 dark:hover:bg-card/70",
           isHovered && "shadow-sm",
-          isCardSelected ? "ring-2 ring-offset-2 ring-secondary/30 dark:ring-secondary/50 ring-offset-background" : ""
+          isSelected ? "ring-2 ring-offset-2 ring-secondary/30 dark:ring-secondary/50 ring-offset-background" : ""
         )}
-        onClick={onCardSelect}
+        onClick={onSelect}
         {...props}
       >
         {isHovered && (

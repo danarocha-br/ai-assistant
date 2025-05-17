@@ -1,16 +1,18 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import {
   Bot,
   Paperclip,
   Mic,
-  CornerDownLeft,
   CopyPlus,
   MoreVertical,
   Clock3,
   Send,
   List,
+  User,
+  Calendar,
+  BarChart,
 } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -27,41 +29,154 @@ import {
 } from "@workspace/ui/components/expandable-chat";
 import { ChatMessageList } from "@workspace/ui/components/chat-message-list";
 import { TalentCard } from "@workspace/ui/components/talent-card";
-import { mockData } from "@/app/mock-data";
+import { mockData, TalentItem, MessageItem } from "@/app/mock-data";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@workspace/ui/components/dropdown-menu";
+import { cn } from "@workspace/ui/lib/utils";
+
+const initialMessages = mockData.filter(message => message.type !== 'talent');
+const talentMessages = mockData.filter((message): message is TalentItem => message.type === 'talent');
 
 export function Chat() {
-  const [messages, setMessages] = useState(mockData);
-  let talentCardCount = 0; // Initialize counter
+  const [messages, setMessages] = useState<(MessageItem | TalentItem)[]>(initialMessages);
+  const [selectedTalents, setSelectedTalents] = useState<TalentItem[]>([]);
+  let talentCardCount = 0;
 
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showTalentCards, setShowTalentCards] = useState(false);
+  const [animatingTalentCards, setAnimatingTalentCards] = useState(false);
+
+  // Effect to trigger animation when showTalentCards becomes true
+  useEffect(() => {
+    if (showTalentCards) {
+      setAnimatingTalentCards(true);
+      // Optional: set a timeout to reset animating state if needed
+      // const timer = setTimeout(() => setAnimatingTalentCards(false), 500);
+      // return () => clearTimeout(timer);
+    } else {
+      setAnimatingTalentCards(false);
+    }
+  }, [showTalentCards]);
+
+  const handleTalentSelect = (talent: TalentItem) => {
+    setSelectedTalents((prev) => {
+      const exists = prev.find((t) => t.id === talent.id);
+      if (exists) {
+        // If talent is already selected, remove it and hide suggestions if no talents are left
+        const newSelection = prev.filter((t) => t.id !== talent.id);
+        if (newSelection.length === 0) {
+          setShowSuggestions(false);
+        }
+        return newSelection;
+      }
+      // If talent is not selected, add it and show suggestions
+      const newSelection = [...prev, talent];
+      setShowSuggestions(true);
+      return newSelection;
+    });
+  };
+
+  const getTalentSuggestions = () => {
+    if (selectedTalents.length === 0) return [];
+    
+    const suggestions = [];
+    for (const talent of selectedTalents) {
+      suggestions.push(
+        {
+          text: `View ${talent.content.name}'s full profile`,
+          icon: <User className="size-4 text-muted-foreground" />,
+          action: () => {
+            setMessages((prev) => [
+              ...prev,
+              {
+                id: prev.length + 1,
+                content: `Let me show you ${talent.content.name}'s complete profile.`,
+                sender: "user",
+              },
+            ]);
+            setShowSuggestions(false);
+          }
+        },
+        {
+          text: `Check ${talent.content.name}'s availability`,
+          icon: <Calendar className="size-4 text-muted-foreground" />,
+          action: () => {
+            setMessages((prev) => [
+              ...prev,
+              {
+                id: prev.length + 1,
+                content: `I'd like to check ${talent.content.name}'s availability for our campaign.`,
+                sender: "user",
+              },
+            ]);
+            setShowSuggestions(false);
+          }
+        },
+        {
+          text: `Analyze ${talent.content.name}'s performance`,
+          icon: <BarChart className="size-4 text-muted-foreground" />,
+          action: () => {
+            setMessages((prev) => [
+              ...prev,
+              {
+                id: prev.length + 1,
+                content: `Can you analyze ${talent.content.name}'s performance metrics?`,
+                sender: "user",
+              },
+            ]);
+            setShowSuggestions(false);
+          }
+        }
+      );
+    }
+    return suggestions;
+  };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: prev.length + 1,
-        content: input,
-        sender: "user",
-      },
-    ]);
+    const userMessage = {
+      id: messages.length + 1,
+      content: input,
+      sender: "user",
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
+    setShowTalentCards(false); // Hide talent cards when a new message is sent
+    setSelectedTalents([]); // Clear selected talents
+    setShowSuggestions(false); // Hide suggestions
 
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: prev.length + 1,
-          content: "This is an AI response to your message.",
-          sender: "ai",
-        },
-      ]);
-      setIsLoading(false);
-    }, 1000);
+    if (input.trim().toLowerCase() === "find recommendations") {
+      setTimeout(() => {
+        setMessages((prev) => [
+          ...prev,
+          { id: prev.length + 1, content: "I'd be happy to help you find the perfect talent for this clean beauty skincare launch. Based on your requirements for creators who focus on sustainability, I have several recommendations:", sender: "ai" },
+        ]);
+        setIsLoading(false);
+        setShowTalentCards(true); // Show talent cards
+      }, 1000);
+    } else {
+      setTimeout(() => {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: prev.length + 1,
+            content: "This is an AI response to your message.",
+            sender: "ai",
+          },
+        ]);
+        setIsLoading(false);
+      }, 1000);
+    }
   };
 
   const handleAttachFile = () => {
@@ -95,20 +210,12 @@ export function Chat() {
 
         <ExpandableChatBody>
           <ChatMessageList>
-            {messages.map((message) => {
-              if (message.type === "talent" && talentCardCount < 3) {
-                talentCardCount++;
-                return (
-                  <TalentCard
-                    key={message.id}
-                    className="ml-12"
-                    talent={message.content}
-                  />
-                );
-              } else if (message.type !== "talent") {
+            {messages.map((message, index) => {
+              // Render non-talent messages and AI responses in the main list
+              if (message.type !== "talent") {
                 return (
                   <ChatBubble
-                    key={message.id}
+                    key={`message-${message.id}`}
                     variant={message.sender === "user" ? "sent" : "received"}
                   >
                     <ChatBubbleAvatar
@@ -129,6 +236,31 @@ export function Chat() {
               return null;
             })}
 
+            {/* Render talent cards separately when showTalentCards is true */}
+            {showTalentCards && (
+              <div className="flex flex-col gap-3">
+                {talentMessages.map((talentMessage, index) => {
+                  talentCardCount++;
+                  // Limit to 3 talent cards for rendering purposes if needed, but render all for selection
+                  if (talentCardCount <= 3) {
+                    return (
+                      <TalentCard
+                        key={`talent-${talentMessage.id}`}
+                        className={cn(
+                          "ml-12 transition-all duration-500 ease-out",
+                          animatingTalentCards ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                        )}
+                        talent={talentMessage.content}
+                        onSelect={() => handleTalentSelect(talentMessage)}
+                        isSelected={selectedTalents.some(t => t.id === talentMessage.id)}
+                      />
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+            )}
+
             {isLoading && (
               <ChatBubble variant="received">
                 <ChatBubbleAvatar
@@ -145,7 +277,7 @@ export function Chat() {
         <ExpandableChatFooter>
           <form
             onSubmit={handleSubmit}
-            className="relative rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring "
+            className="relative rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring"
           >
             <div className="flex justify-between items-center pr-2">
               <ChatInput
@@ -179,14 +311,40 @@ export function Chat() {
                 <Mic className="size-4" />
               </Button>
 
-              <Button
-                variant="ghost"
-                type="button"
-                className="hover:bg-primary-foreground text-xs"
-                onClick={handleMicrophoneClick}
-              >
-                <List className="size-4" /> Suggestions
-              </Button>
+              <DropdownMenu open={showSuggestions} onOpenChange={setShowSuggestions}>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    type="button"
+                    className="hover:bg-primary-foreground text-xs"
+                  >
+                    <List className="size-4" /> Suggestions
+                    {selectedTalents.length > 0 && (
+                      <span className="ml-1 text-xs bg-primary text-primary-foreground rounded-full px-1.5">
+                        {selectedTalents.length}
+                      </span>
+                    )}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" side="top" className="max-w-80 bg-popover">
+                  {selectedTalents.length === 0 ? (
+                    <div className="p-2 text-sm text-muted-foreground">
+                      Select a talent to see suggestions
+                    </div>
+                  ) : (
+                    getTalentSuggestions().map((suggestion, index) => (
+                      <DropdownMenuItem
+                        key={index}
+                        onClick={suggestion.action}
+                        className="flex items-center gap-2"
+                      >
+                        {suggestion.icon}
+                        <span>{suggestion.text}</span>
+                      </DropdownMenuItem>
+                    ))
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </form>
         </ExpandableChatFooter>
