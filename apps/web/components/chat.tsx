@@ -286,7 +286,8 @@ export function Chat() {
                 placeholder="Type your message..."
                 className="min-h-12 resize-none rounded-lg bg-background border-0 p-3 shadow-none focus-visible:ring-0"
               />
-              <Button type="submit" size="icon" className="ml-auto size-9">
+                
+                <Button type="submit" size="icon" disabled={!input} className="ml-auto size-9">
                 <Send className="size-4" />
               </Button>
             </div>
