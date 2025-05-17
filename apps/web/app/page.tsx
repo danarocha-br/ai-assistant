@@ -10,11 +10,13 @@ import {
 import { Chat } from "../components/chat";
 import { Bot, LayoutGrid, Sun, Moon } from "lucide-react";
 import CardList from "./card-list";
+import { LogoDanaRocha } from "@/components/logo-danarocha";
 
 export default function Page() {
   const { setTheme, theme } = useTheme();
   return (
     <div className="relative bg-gradient-to-bl from-blue-50 via-purple-50 to-orange-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-900 flex justify-center min-h-svh w-full">
+     <LogoDanaRocha />
       <Tabs defaultValue="chat" className="w-full pt-6 flex items-center">
         <TabsList className="flex w-full w-60">
           <TabsTrigger value="chat">
