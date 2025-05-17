@@ -2,11 +2,11 @@
 import * as React from "react";
 
 import { cn } from "@workspace/ui/lib/utils";
+import { Instagram, Youtube } from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
-  DialogTitle,
 } from "@workspace/ui/components/dialog";
 import {
   Avatar,
@@ -15,13 +15,12 @@ import {
 } from "@workspace/ui/components/avatar";
 import { Badge } from "@workspace/ui/components/badge";
 import { Calendar, Dot, MapPin } from "lucide-react";
-import { SocialMediaIcon } from "./talent-card.js";
-import { Instagram, Youtube } from "lucide-react";
-import { TikToktIcon } from "@workspace/ui/components/icons/tiktok.js";
+import { TikToktIcon } from "@workspace/ui/components/icons/tiktok";
 import { SnapchatIcon } from "@workspace/ui/components/icons/snapchat.js";
-import { Button } from "./button.js";
+import { Button } from "@workspace/ui/components/button";
+import { SocialMediaIcon } from "./talent-card.js";
 
-type TalentCardPlatform = {
+export type TalentCardPlatform = {
   name: string;
   followers: string;
   engagement: string;
@@ -213,4 +212,4 @@ const getInitials = (name: string) => {
     .toUpperCase();
 };
 
-export { TalentDialog };
+export { TalentDialog, TalentCardPlatform };

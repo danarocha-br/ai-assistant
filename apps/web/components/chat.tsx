@@ -29,6 +29,7 @@ import { mockData } from "@/app/mock-data";
 
 export function Chat() {
   const [messages, setMessages] = useState(mockData);
+  let talentCardCount = 0; // Initialize counter
 
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -92,31 +93,37 @@ export function Chat() {
 
         <ExpandableChatBody>
           <ChatMessageList>
-            {messages.map((message) =>
-              message.type === "talent" ? (
-                <TalentCard
-                  key={message.id}
-                  className="ml-12"
-                  talent={message.content}
-                />
-              ) : (
-                <ChatBubble
-                  key={message.id}
-                  variant={message.sender === "user" ? "sent" : "received"}
-                >
-                  <ChatBubbleAvatar
-                    isUser={message.sender === "user"}
-                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&h=64&q=80&crop=faces&fit=crop"
-                    fallback={message.sender === "user" ? "US" : "AI"}
+            {messages.map((message) => {
+              if (message.type === "talent" && talentCardCount < 3) { 
+                talentCardCount++; 
+                return (
+                  <TalentCard
+                    key={message.id}
+                    className="ml-12"
+                    talent={message.content}
                   />
-                  <ChatBubbleMessage
+                );
+              } else if (message.type !== "talent") { 
+                return (
+                  <ChatBubble
+                    key={message.id}
                     variant={message.sender === "user" ? "sent" : "received"}
                   >
-                    {typeof message.content === "string" ? message.content : ""}
-                  </ChatBubbleMessage>
-                </ChatBubble>
-              )
-            )}
+                    <ChatBubbleAvatar
+                      isUser={message.sender === "user"}
+                      src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&h=64&q=80&crop=faces&fit=crop"
+                      fallback={message.sender === "user" ? "US" : "AI"}
+                    />
+                    <ChatBubbleMessage
+                      variant={message.sender === "user" ? "sent" : "received"}
+                    >
+                      {typeof message.content === "string" ? message.content : ""}
+                    </ChatBubbleMessage>
+                  </ChatBubble>
+                );
+              }
+              return null; 
+            })}
 
             {isLoading && (
               <ChatBubble variant="received">

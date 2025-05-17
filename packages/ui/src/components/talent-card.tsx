@@ -22,9 +22,9 @@ import {
   Youtube,
   Maximize2,
 } from "lucide-react";
-import { Checkbox } from "@workspace/ui/components/checkbox.js";
-import { SnapchatIcon } from "@workspace/ui/components/icons/snapchat.js";
-import { TikToktIcon } from "@workspace/ui/components/icons/tiktok.js";
+import { Checkbox } from "@workspace/ui/components/checkbox";
+import { SnapchatIcon } from "@workspace/ui/components/icons/snapchat";
+import { TikToktIcon } from "@workspace/ui/components/icons/tiktok";
 import { TalentDialog } from "./talent-dialog.js";
 
 type TalentCardPlatform = {
@@ -51,9 +51,15 @@ type TalentCardProps = {
     topContent: string[];
     platforms: TalentCardPlatform[];
   };
+  removeSelection?: boolean;
 } & React.ComponentProps<"div">;
 
-function TalentCard({ className, talent, ...props }: TalentCardProps) {
+function TalentCard({
+  className,
+  talent,
+  removeSelection = false,
+  ...props
+}: TalentCardProps) {
   const [isHovered, setIsHovered] = React.useState(false);
   const [isCardSelected, setIsCardSelected] = React.useState(false);
   const [showContent, setShowContent] = React.useState(false);
@@ -62,17 +68,19 @@ function TalentCard({ className, talent, ...props }: TalentCardProps) {
     return setShowContent(!showContent);
   }
   function onCardSelect() {
-    return setIsCardSelected(!isCardSelected);
+    return !removeSelection && setIsCardSelected(!isCardSelected);
   }
 
   return (
     <div className={cn("relative flex items-center gap-2", className)}>
-      <Checkbox
-        id="choose"
-        className="absolute -left-10"
-        checked={isCardSelected}
-        onCheckedChange={onCardSelect}
-      />
+      {!removeSelection && (
+        <Checkbox
+          id="choose"
+          className="absolute -left-10"
+          checked={isCardSelected}
+          onCheckedChange={onCardSelect}
+        />
+      )}
       <div
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
