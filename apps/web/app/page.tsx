@@ -1,3 +1,6 @@
+"use client";
+
+import { useTheme } from "next-themes";
 import {
   Tabs,
   TabsContent,
@@ -5,14 +8,15 @@ import {
   TabsTrigger,
 } from "@workspace/ui/components/tabs";
 import { Chat } from "../components/chat";
-import { Bot, LayoutGrid } from "lucide-react";
+import { Bot, LayoutGrid, Sun, Moon } from "lucide-react";
 import CardList from "./card-list";
 
 export default function Page() {
+  const { setTheme, theme } = useTheme();
   return (
-    <div className="relative bg-gradient-to-bl from-blue-50 via-purple-50 to-orange-50 flex justify-center min-h-svh w-full">
+    <div className="relative bg-gradient-to-bl from-blue-50 via-purple-50 to-orange-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-900 flex justify-center min-h-svh w-full">
       <Tabs defaultValue="chat" className="w-full pt-6 flex items-center">
-        <TabsList className="grid w-full grid-cols-2 w-60">
+        <TabsList className="flex w-full w-60">
           <TabsTrigger value="chat">
             <Bot className="h-5 w-5" />
             Chat
@@ -20,6 +24,9 @@ export default function Page() {
           <TabsTrigger value="list">
             <LayoutGrid className="h-5 w-5" /> List
           </TabsTrigger>
+          <button className="flex items-center justify-center px-4 bg-muted h-full rounded-md" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+            {theme === "dark" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+          </button>
         </TabsList>
 
         <TabsContent value="chat" className="w-full">

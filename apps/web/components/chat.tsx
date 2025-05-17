@@ -9,6 +9,8 @@ import {
   CopyPlus,
   MoreVertical,
   Clock3,
+  Send,
+  List,
 } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -94,8 +96,8 @@ export function Chat() {
         <ExpandableChatBody>
           <ChatMessageList>
             {messages.map((message) => {
-              if (message.type === "talent" && talentCardCount < 3) { 
-                talentCardCount++; 
+              if (message.type === "talent" && talentCardCount < 3) {
+                talentCardCount++;
                 return (
                   <TalentCard
                     key={message.id}
@@ -103,7 +105,7 @@ export function Chat() {
                     talent={message.content}
                   />
                 );
-              } else if (message.type !== "talent") { 
+              } else if (message.type !== "talent") {
                 return (
                   <ChatBubble
                     key={message.id}
@@ -117,12 +119,14 @@ export function Chat() {
                     <ChatBubbleMessage
                       variant={message.sender === "user" ? "sent" : "received"}
                     >
-                      {typeof message.content === "string" ? message.content : ""}
+                      {typeof message.content === "string"
+                        ? message.content
+                        : ""}
                     </ChatBubbleMessage>
                   </ChatBubble>
                 );
               }
-              return null; 
+              return null;
             })}
 
             {isLoading && (
@@ -141,37 +145,47 @@ export function Chat() {
         <ExpandableChatFooter>
           <form
             onSubmit={handleSubmit}
-            className="relative rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring p-1"
+            className="relative rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring "
           >
-            <ChatInput
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your message..."
-              className="min-h-12 resize-none rounded-lg bg-background border-0 p-3 shadow-none focus-visible:ring-0"
-            />
-            <div className="flex items-center p-3 pt-0 justify-between">
-              <div className="flex">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  type="button"
-                  onClick={handleAttachFile}
-                >
-                  <Paperclip className="size-4" />
-                </Button>
+            <div className="flex justify-between items-center pr-2">
+              <ChatInput
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Type your message..."
+                className="min-h-12 resize-none rounded-lg bg-background border-0 p-3 shadow-none focus-visible:ring-0"
+              />
+              <Button type="submit" size="icon" className="ml-auto size-9">
+                <Send className="size-4" />
+              </Button>
+            </div>
+            <div className="flex items-center px-3 py-px gap-2 bg-muted border-t rounded-b-md">
+              <Button
+                variant="ghost"
+                size="icon"
+                type="button"
+                className="hover:bg-primary-foreground"
+                onClick={handleAttachFile}
+              >
+                <Paperclip className="size-4" />
+              </Button>
 
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  type="button"
-                  onClick={handleMicrophoneClick}
-                >
-                  <Mic className="size-4" />
-                </Button>
-              </div>
-              <Button type="submit" size="sm" className="ml-auto gap-1.5">
-                Send Message
-                <CornerDownLeft className="size-3.5" />
+              <Button
+                variant="ghost"
+                size="icon"
+                type="button"
+                className="hover:bg-primary-foreground"
+                onClick={handleMicrophoneClick}
+              >
+                <Mic className="size-4" />
+              </Button>
+
+              <Button
+                variant="ghost"
+                type="button"
+                className="hover:bg-primary-foreground text-xs"
+                onClick={handleMicrophoneClick}
+              >
+                <List className="size-4" /> Suggestions
               </Button>
             </div>
           </form>

@@ -55,8 +55,8 @@ export function ChatBubbleMessage({
       className={cn(
         "rounded-md px-4 py-2 text-sm",
         variant === "sent"
-          ? "bg-secondary text-primary-foreground"
-          : "bg-muted/70",
+          ? "bg-secondary text-secondary-foreground"
+          : "bg-muted/70 dark:bg-muted",
         className
       )}
     >
@@ -90,7 +90,7 @@ export function ChatBubbleAvatar({
       <AvatarFallback>{fallback}</AvatarFallback>
     </Avatar>
   ) : (
-    <span className="aspect-square rounded-full bg-primary flex justify-center items-center size-9 pl-0.5">
+    <span className="aspect-square rounded-full bg-primary dark:bg-accent flex justify-center items-center size-9 pl-0.5">
       <Logo />
     </span>
   );

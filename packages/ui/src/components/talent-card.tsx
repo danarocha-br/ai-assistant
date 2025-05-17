@@ -86,9 +86,9 @@ function TalentCard({
         onMouseLeave={() => setIsHovered(false)}
         data-slot="talent-card"
         className={cn(
-          "cursor-pointer w-full border bg-card text-card-foreground flex flex-col gap-4 rounded-md  py-3  transition-all duration-500",
+          "cursor-pointer w-full border bg-card text-card-foreground flex flex-col gap-4 rounded-md  py-3  transition-all duration-500 dark:hover:bg-card/70",
           isHovered && "shadow-sm",
-          isCardSelected ? "ring-2 ring-offset-2 ring-secondary/30" : ""
+          isCardSelected ? "ring-2 ring-offset-2 ring-secondary/30 dark:ring-secondary/50 ring-offset-background" : ""
         )}
         onClick={onCardSelect}
         {...props}
@@ -185,8 +185,8 @@ function CardHeader({
         <Avatar
           size="lg"
           className={cn(
-            "ring-2 ring-accent ring-offset-2 transition-all duration-300",
-            isHovered && "ring-primary/30"
+            "ring-2 ring-accent ring-offset-2 ring-offset-card transition-all duration-300",
+            isHovered && "ring-primary/30 dark:ring-primary/60"
           )}
         >
           {userImage && <AvatarImage src={userImage} />}
