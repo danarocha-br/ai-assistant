@@ -278,6 +278,12 @@ export function Chat() {
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Type your message..."
                 className="min-h-12 resize-none rounded-lg bg-background border-0 p-3 shadow-none focus-visible:ring-0"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault(); 
+                    handleSubmit(e); 
+                  }
+                }}
               />
                 
                 <Button type="submit" size="icon" disabled={!input} className="ml-auto size-9">
