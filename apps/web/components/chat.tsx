@@ -52,13 +52,9 @@ export function Chat() {
   const [showTalentCards, setShowTalentCards] = useState(false);
   const [animatingTalentCards, setAnimatingTalentCards] = useState(false);
 
-  // Effect to trigger animation when showTalentCards becomes true
   useEffect(() => {
     if (showTalentCards) {
       setAnimatingTalentCards(true);
-      // Optional: set a timeout to reset animating state if needed
-      // const timer = setTimeout(() => setAnimatingTalentCards(false), 500);
-      // return () => clearTimeout(timer);
     } else {
       setAnimatingTalentCards(false);
     }
@@ -68,14 +64,12 @@ export function Chat() {
     setSelectedTalents((prev) => {
       const exists = prev.find((t) => t.id === talent.id);
       if (exists) {
-        // If talent is already selected, remove it and hide suggestions if no talents are left
         const newSelection = prev.filter((t) => t.id !== talent.id);
         if (newSelection.length === 0) {
           setShowSuggestions(false);
         }
         return newSelection;
       }
-      // If talent is not selected, add it and show suggestions
       const newSelection = [...prev, talent];
       setShowSuggestions(true);
       return newSelection;
@@ -151,9 +145,8 @@ export function Chat() {
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
-    setShowTalentCards(false); // Hide talent cards when a new message is sent
-    setSelectedTalents([]); // Clear selected talents
-    setShowSuggestions(false); // Hide suggestions
+    setSelectedTalents([]);
+    setShowSuggestions(false);
 
     if (input.trim().toLowerCase() === "find recommendations") {
       setTimeout(() => {
@@ -162,7 +155,7 @@ export function Chat() {
           { id: prev.length + 1, content: "I'd be happy to help you find the perfect talent for this clean beauty skincare launch. Based on your requirements for creators who focus on sustainability, I have several recommendations:", sender: "ai" },
         ]);
         setIsLoading(false);
-        setShowTalentCards(true); // Show talent cards
+        setShowTalentCards(true); 
       }, 1000);
     } else {
       setTimeout(() => {
@@ -210,56 +203,56 @@ export function Chat() {
 
         <ExpandableChatBody>
           <ChatMessageList>
-            {messages.map((message, index) => {
-              // Render non-talent messages and AI responses in the main list
+            {[...messages].map((message, index) => {
+              const isAiTriggerMessage = message.sender === 'ai' && typeof message.content === 'string' && message.content.includes("I'd be happy to help you find the perfect talent for this clean beauty skincare launch.");
+
               if (message.type !== "talent") {
                 return (
-                  <ChatBubble
-                    key={`message-${message.id}`}
-                    variant={message.sender === "user" ? "sent" : "received"}
-                  >
-                    <ChatBubbleAvatar
-                      isUser={message.sender === "user"}
-                      src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&h=64&q=80&crop=faces&fit=crop"
-                      fallback={message.sender === "user" ? "US" : "AI"}
-                    />
-                    <ChatBubbleMessage
+                  <div key={`message-group-${message.id || index}`}>
+                    <ChatBubble
+                      key={`message-${message.id || index}`}
                       variant={message.sender === "user" ? "sent" : "received"}
                     >
-                      {typeof message.content === "string"
-                        ? message.content
-                        : ""}
-                    </ChatBubbleMessage>
-                  </ChatBubble>
+                      <ChatBubbleAvatar
+                        isUser={message.sender === "user"}
+                        src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&h=64&q=80&crop=faces&fit=crop"
+                        fallback={message.sender === "user" ? "US" : "AI"}
+                      />
+                      <ChatBubbleMessage
+                        variant={message.sender === "user" ? "sent" : "received"}
+                      >
+                        {typeof message.content === "string"
+                          ? message.content
+                          : ""}
+                      </ChatBubbleMessage>
+                    </ChatBubble>
+
+                    {showTalentCards && isAiTriggerMessage && (
+                       <div className="flex flex-col gap-3 mt-3 ml-12"> 
+                         {talentMessages.map((talentMessage, cardIndex) => {
+                           if (cardIndex < 3) { 
+                             return (
+                               <TalentCard
+                                 key={`talent-${talentMessage.id}`}
+                                 className={cn(
+                                   "transition-all duration-500 ease-out",
+                                   animatingTalentCards ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                                 )}
+                                 talent={talentMessage.content}
+                                 onSelect={() => handleTalentSelect(talentMessage)}
+                                 isSelected={selectedTalents.some(t => t.id === talentMessage.id)}
+                               />
+                             );
+                           }
+                           return null;
+                         })}
+                       </div>
+                     )}
+                  </div>
                 );
               }
-              return null;
+              return null; 
             })}
-
-            {/* Render talent cards separately when showTalentCards is true */}
-            {showTalentCards && (
-              <div className="flex flex-col gap-3">
-                {talentMessages.map((talentMessage, index) => {
-                  talentCardCount++;
-                  // Limit to 3 talent cards for rendering purposes if needed, but render all for selection
-                  if (talentCardCount <= 3) {
-                    return (
-                      <TalentCard
-                        key={`talent-${talentMessage.id}`}
-                        className={cn(
-                          "ml-12 transition-all duration-500 ease-out",
-                          animatingTalentCards ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                        )}
-                        talent={talentMessage.content}
-                        onSelect={() => handleTalentSelect(talentMessage)}
-                        isSelected={selectedTalents.some(t => t.id === talentMessage.id)}
-                      />
-                    );
-                  }
-                  return null;
-                })}
-              </div>
-            )}
 
             {isLoading && (
               <ChatBubble variant="received">

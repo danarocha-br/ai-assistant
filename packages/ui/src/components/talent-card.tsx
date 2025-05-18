@@ -86,7 +86,7 @@ function TalentCard({
         onMouseLeave={() => setIsHovered(false)}
         data-slot="talent-card"
         className={cn(
-          "cursor-pointer w-full border bg-card text-card-foreground flex flex-col gap-4 rounded-md  py-3  transition-all duration-500 dark:hover:bg-card/70",
+          "cursor-pointer w-full border bg-card text-card-foreground flex flex-col gap-4 rounded-md py-3 transition-all duration-500 dark:hover:bg-card/70",
           isHovered && "shadow-sm",
           isSelected ? "ring-2 ring-offset-2 ring-secondary/30 dark:ring-secondary/50 ring-offset-background" : ""
         )}
