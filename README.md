@@ -1,4 +1,4 @@
-# Foam AI Assistant
+# AI Assistant
 
 This monorepo contains all the necessary packages and applications to run this project.
 
